@@ -7,25 +7,59 @@ st.set_page_config(
     layout="wide"
 )
 
-# Custom CSS for Professional Red Branding on Dark Background
-st.markdown("""
-    <style>
-    .brand-title {
-        color: #FF4B4B;
-        font-size: 2.8rem;
-        font-weight: 700;
-        margin-bottom: 0px;
-        line-height: 1.2;
-    }
-    .brand-tagline {
-        color: #FF6B6B;
-        font-size: 1.2rem;
-        font-weight: 500;
-        margin-top: 5px;
-        margin-bottom: 20px;
-    }
-    </style>
-""", unsafe_allow_html=True)
+# Sidebar Language Selection
+st.sidebar.title("🌍 Language / زبان")
+selected_lang = st.sidebar.selectbox("Choose Language", ["English", "اردو"])
+
+# Dynamic RTL Styling for Urdu
+if selected_lang == "اردو":
+    st.markdown("""
+        <style>
+        .stApp {
+            direction: rtl;
+            text-align: right;
+        }
+        .stSidebar {
+            direction: rtl;
+            text-align: right;
+        }
+        .brand-title {
+            color: #FF4B4B;
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 0px;
+            line-height: 1.2;
+            text-align: right;
+        }
+        .brand-tagline {
+            color: #FF6B6B;
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-top: 5px;
+            margin-bottom: 20px;
+            text-align: right;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+else:
+    st.markdown("""
+        <style>
+        .brand-title {
+            color: #FF4B4B;
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 0px;
+            line-height: 1.2;
+        }
+        .brand-tagline {
+            color: #FF6B6B;
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-top: 5px;
+            margin-bottom: 20px;
+        }
+        </style>
+    """, unsafe_allow_html=True)
 
 # Bilingual Dictionary / لغت (English & Urdu)
 translations = {
@@ -62,6 +96,12 @@ translations = {
         "scan_input": "Target Endpoint URL",
         "scan_btn": "Initiate Security Audit 🚀",
         
+        "threat_heading": "Live Threat Intelligence Feed",
+        "threat_desc": "Real-time vulnerability feeds synchronized with global CVE and NVD intelligence databases.",
+        
+        "block_heading": "Active Blocking & Mitigation Engine",
+        "block_desc": "Automated edge interception logging and active threat suppression telemetry.",
+        
         "pricing_heading": "Flexible Security Tiering",
         "pricing_desc": "Transparent pricing tailored for every digital scale.",
         "plan_starter": "Starter",
@@ -73,7 +113,7 @@ translations = {
         "btn_starter": "Deploy Starter"
     },
     "اردو": {
-        "brand_title": "ویجیلاائر (Vigilaire)",
+        "brand_title": "ویجیلاائر",
         "brand_subtitle": "مسلسل ذہانت۔ ریئل ٹائم تحفظ۔",
         "nav_title": "کنٹرول پینل",
         "nav_overview": "پلیٹ فارم کا جائزہ",
@@ -83,7 +123,7 @@ translations = {
         "nav_plans": "انٹرپرائز اور سبسکرپشن پلانز",
         
         "hero_heading": "جدید ویب اثاثوں کے لیے خودکار سائبر سیکیورٹی",
-        "hero_desc": "ویجیلاائر ویب سائٹس، ویب ایپلیکیشنز، آن لائن سٹورز اور ڈیٹا بیس کے لیے مسلسل کمزوری کی نگرانی اور خودکار خطرات سے دفاع فراہم کرتا ہے۔",
+        "hero_desc": "ویجیلاائر ویب سائٹس، ویب ایپلیکیشنز، آن لائن سٹورز اور ڈیٹا بیس اینڈ پوائنٹس کے لیے مسلسل کمزوری کی نگرانی، خطرات کی جانچ اور خودکار دفاع فراہم کرتا ہے۔",
         
         "card1_title": "مسلسل کمزوری کی دریافت",
         "card1_desc": "غلط کنفیگریشنز، پرانے سسٹمز اور پبلک ڈیٹا بیس اینڈ پوائنٹس کی روزانہ خودکار دریافت۔",
@@ -98,12 +138,18 @@ translations = {
         "metric_assets": "زیرِ نگرانی اثاثے",
         "metric_latency": "خطرے کا پتہ لگانے کی رفتار",
         "metric_false": "فالس پازیٹیو ہدف",
-        "metric_uptime": "سسٹم کا وقتِ کار (Uptime)",
+        "metric_uptime": "سسٹم کا وقتِ کار",
         
         "scan_heading": "فوری سیکیورٹی اینڈ پوائنٹ معائنہ",
         "scan_desc": "ہدف ویب انفراسٹرکچر پر فوری خودکار سیکیورٹی معائنہ کریں۔",
         "scan_input": "ہدف اینڈ پوائنٹ یو آر ایل",
         "scan_btn": "سیکیورٹی آڈٹ شروع کریں 🚀",
+        
+        "threat_heading": "لائیو تھ্রেট انٹیلی جنس فیڈ",
+        "threat_desc": "عالمی CVE اور NVD انٹیلی جنس ڈیٹا بیس کے ساتھ مطابقت پذیر ریئل ٹائم کمزوری کی فیڈز۔",
+        
+        "block_heading": "ایکٹیভ بلاکنگ اور مٹیگیشن انجن",
+        "block_desc": "خودکار ایج انٹرسیپشن لاگنگ اور فعال خطرات سے بچاؤ کا نظام۔",
         
         "pricing_heading": "لچکدار سیکیورٹی ٹیرف",
         "pricing_desc": "ہر ڈیجیٹل پیمانے کے لیے موزوں شفاف قیمتیں۔",
@@ -117,9 +163,6 @@ translations = {
     }
 }
 
-# Sidebar Language Selection
-st.sidebar.title("🌍 Language / زبان")
-selected_lang = st.sidebar.selectbox("Choose Language", ["English", "اردو"])
 t = translations[selected_lang]
 
 # Navigation
@@ -162,6 +205,21 @@ elif nav_selection == t["nav_scan"]:
     target_url = st.text_input(t["scan_input"], "https://example.com")
     if st.button(t["scan_btn"]):
         st.success("✨ Security audit initiated successfully across target vectors.")
+
+elif nav_selection == t["nav_threat"]:
+    st.header(t["threat_heading"])
+    st.write(t["threat_desc"])
+    st.markdown("### 🔴 Active CVE Intelligence Stream")
+    st.info("**CVE-2026-4891** (Severity: Critical)\n\nRemote Code Execution vector detected in legacy database drivers. Automated patch rule deployed.")
+    st.warning("**CVE-2026-3102** (Severity: High)\n\nCross-Site Scripting (XSS) vulnerability found in input parameter validation.")
+    st.success("**CVE-2026-1044** (Severity: Medium)\n\nHeader misconfiguration patched via Vigilaire edge proxy.")
+
+elif nav_selection == t["nav_block"]:
+    st.header(t["block_heading"])
+    st.write(t["block_desc"])
+    st.markdown("### 🛡️ Real-Time Interception Logs")
+    st.metric("Blocked Attack Vectors (24h)", "1,420", "+18% vs yesterday")
+    st.code("[BLOCKED] IP: 192.168.4.12 - SQL Injection Attempt on /login\n[BLOCKED] IP: 45.33.22.11 - Brute Force Credential Spray\n[MITIGATED] Rate limit triggered for User-Agent: ScannerBot/1.0", language="text")
 
 elif nav_selection == t["nav_plans"]:
     st.header(t["pricing_heading"])
