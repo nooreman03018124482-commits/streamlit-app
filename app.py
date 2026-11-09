@@ -516,6 +516,28 @@ p, li { line-height: 2.1 !important; }
 st.markdown(BASE_CSS, unsafe_allow_html=True)
 if is_rtl:
     st.markdown(RTL_CSS, unsafe_allow_html=True)
+st.markdown(BASE_CSS, unsafe_allow_html=True)
+if is_rtl:
+    st.markdown(RTL_CSS, unsafe_allow_html=True)
+
+st.markdown(
+    """
+    <style>
+    :root, .stApp { color-scheme: light !important; }
+    .stApp [data-testid="stRadio"] *,
+    .stApp [data-testid="stMetric"] *,
+    .stApp [data-testid="stWidgetLabel"] * {
+        color: #0B2545 !important;
+        -webkit-text-fill-color: #0B2545 !important;
+    }
+    .stApp [data-testid="stRadio"] label > div:first-child {
+        background-color: #FFFFFF !important;
+        border-color: #0B2545 !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 
 # ----------------------------------------------------------------------------
 # Header: brand, language, navigation
