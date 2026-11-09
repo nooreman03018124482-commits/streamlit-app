@@ -1,4 +1,3 @@
-```python
 import hashlib
 import re
 import time
@@ -273,561 +272,8 @@ T = {
             {"name": "ایجنسی", "price": "حسبِ ضرورت", "usd": "ری سیلر شرائط", "for": "ویب ایجنسیاں اور سافٹ ویئر ہاؤسز", "feats": ["ایک ساتھ کئی کلائنٹ سائٹس کا تحفظ", "ریفر کیے گئے صارفین پر کمیشن", "پارٹنر ڈیش بورڈ اور ماہانہ اسٹیٹمنٹ", "کو برانڈڈ رپورٹس"], "btn": "پارٹنر بنیں"},
         ],
         "extras_title": "مزید دستیاب",
-        "extras": [Here is the full `app.py`:
-
-```python
-import hashlib
-import re
-import time
-
-import streamlit as st
-
-# ----------------------------------------------------------------------------
-# Page configuration
-# ----------------------------------------------------------------------------
-st.set_page_config(
-    page_title="Vigilaire | Always-On Cyber Security for Small Businesses",
-    page_icon="🛡️",
-    layout="wide",
-    initial_sidebar_state="collapsed",
-)
-
-
-def h(s: str) -> str:
-    """Flatten HTML so Markdown never treats indented lines as code blocks."""
-    return "".join(line.strip() for line in s.strip().splitlines())
-
-
-# ----------------------------------------------------------------------------
-# Content (English and Urdu), based on the Vigilaire Business Plan 2026
-# ----------------------------------------------------------------------------
-T = {
-    "English": {
-        "dir": "ltr",
-        "tagline": "Always-on cyber security for small businesses",
-        "lang_label": "Language",
-        "nav": {
-            "overview": "Overview",
-            "scan": "Free Security Check",
-            "threat": "Threat Feed",
-            "block": "Blocking Engine",
-            "plans": "Pricing",
-        },
-        "hero_title": "The watchdog that never sleeps for your website.",
-        "hero_sub": "Vigilaire checks your website and databases every day, warns you in simple Urdu and English with a step-by-step fix guide, and blocks the attacks it can safely stop.",
-        "hero_cta1": "Run a free security check",
-        "hero_cta2": "See pricing",
-        "stats": [
-            ("< 5 min", "Target time from detection to owner alert"),
-            ("< 2%", "Target false-block rate"),
-            ("Urdu + English", "Alerts, fix guides and support"),
-            ("PKR 5,999", "Starting price per month"),
-        ],
-        "three_title": "Find it. Warn you. Block it.",
-        "three_sub": "Three jobs in one service, built for businesses without a security team.",
-        "cards": [
-            ("🔍", "Find weak spots", "Continuous scanning of your website and internet-facing database endpoints for misconfigurations, outdated components and newly published CVEs."),
-            ("💬", "Warn you in plain language", "Every alert says what is wrong, why it matters and how to fix it, ranked from most to least dangerous. Sent by email, WhatsApp or Slack."),
-            ("🛑", "Block what is safe to block", "With your written permission, Vigilaire stops password guessing and high-confidence malicious requests while your permanent fix is prepared."),
-        ],
-        "how_title": "How Vigilaire works",
-        "how_sub": "The same cycle runs every day for every authorized website.",
-        "steps": [
-            ("Sign up and prove ownership", "Add your site, verify it with a DNS record or meta tag, and sign the written authorization."),
-            ("Discover assets", "We map your public pages, login forms and database ports."),
-            ("Test against attack patterns", "Assets are checked against known attacks, misconfigurations and new CVEs."),
-            ("Rank by severity", "Findings are ordered from most to least dangerous."),
-            ("Alert within minutes", "You get a short warning and a fix guide by email or WhatsApp."),
-            ("Protect and re-test", "Blocking runs in your chosen mode, and we re-test after you fix."),
-        ],
-        "who_title": "Built for businesses that run a website but have no security team",
-        "who": ["Online stores", "Software companies and start-ups", "Payment and wallet firms", "Clinics and hospitals", "Schools and universities", "Hotels and tour operators", "Web agencies (resellers)"],
-        "cmp_title": "Why not an enterprise tool or a free scanner?",
-        "cmp_head": ["", "Enterprise tools", "Free scanners", "Vigilaire"],
-        "cmp_rows": [
-            ("Price", "Dollar pricing", "Free", "Rupee pricing from PKR 5,999"),
-            ("Needs a trained operator", "Yes", "Yes", "No"),
-            ("Alerts in plain language", "Rarely", "No", "Urdu and English"),
-            ("Blocks attacks", "Sold separately", "No", "Built in, with your permission"),
-            ("Local support", "No", "No", "Urdu and English, Pakistan hours"),
-        ],
-        "kpi_title": "Year-1 service targets",
-        "kpi_note": "These are planning targets from the Vigilaire Business Plan 2026, not live measurements.",
-        "kpis": [
-            ("Customers by Month 12", "150", "Target"),
-            ("Detection to alert", "< 5 min", "Target"),
-            ("False-alert rate", "7%", "By Month 12"),
-            ("Monthly churn", "< 4%", "Target"),
-        ],
-        "scan_title": "Free security check",
-        "scan_sub": "Enter your website address to see the kind of report Vigilaire produces. This page runs a demonstration only. A real scan needs proof of ownership and a signed authorization.",
-        "scan_input": "Website address",
-        "scan_btn": "Run demo check",
-        "scan_bad": "Please enter a valid website address, for example https://shop.example.pk",
-        "scan_progress": ["Verifying address format...", "Mapping public pages and login forms...", "Matching against known weaknesses...", "Ranking findings by severity..."],
-        "scan_done": "Demo check finished for",
-        "scan_demo_note": "Demonstration data only. No request was sent to your website. Sign up to run an authorized scan.",
-        "sev": {"Critical": "Critical", "High": "High", "Medium": "Medium"},
-        "fix_label": "How to fix it",
-        "why_label": "Why it matters",
-        "threat_title": "Threat intelligence feed",
-        "threat_sub": "Vigilaire pulls new entries every day from CISA KEV, NVD and CVE.org, matches them to each customer's software list and scores them.",
-        "threat_src": [
-            ("CISA KEV", "Weaknesses already used in real attacks", "Highest-priority alerts"),
-            ("NVD", "Details, affected products and CVSS severity score", "Matching and scoring"),
-            ("CVE.org", "Official identifiers and short descriptions", "Reference and cross-check"),
-        ],
-        "threat_head": ["CVE", "Severity", "Summary", "Vigilaire action"],
-        "threat_rows": [
-            ("CVE-2023-34362", "Critical", "SQL injection in file-transfer software, exploited at scale in 2023 (MOVEit).", "Owner alerted; virtual patch rule available"),
-            ("CVE-2026-4891", "Critical", "Remote code execution in a legacy database driver.", "Owner alerted with fix guide"),
-            ("CVE-2026-3102", "High", "Cross-site scripting through weak input validation.", "Alert sent; input rule suggested"),
-            ("CVE-2026-1044", "Medium", "Security header misconfiguration.", "Alert sent with one-line fix"),
-        ],
-        "threat_note": "Illustrative sample entries for demonstration. The live feed runs on the daily pipeline described in the business plan.",
-        "block_title": "Blocking engine",
-        "block_sub": "Blocking is always optional, time-limited, logged and reversible with one click. Vigilaire never tests or blocks any asset without prior written authorization.",
-        "modes_title": "Choose your blocking mode",
-        "modes": [
-            ("Alert-only", "Finds and warns, but never blocks. Every new customer can start here."),
-            ("Standard", "Blocks high-confidence attacks and repeated failed logins. The recommended default."),
-            ("Strict", "Also blocks medium-confidence patterns. Safer against attacks, but more likely to affect real users."),
-        ],
-        "login_title": "Login protection (starting defaults)",
-        "login_head": ["Condition", "Action"],
-        "login_rows": [
-            ("Three failed logins on one account", "Lock the account for 15 minutes and email the owner"),
-            ("One IP fails on three accounts, or ten times in ten minutes", "Block the IP for 1 hour (stops password spraying)"),
-            ("Attempts continue after a block", "Escalate to 24 hours, then 7 days, then manual review"),
-            ("Your own office IP addresses", "Allow-listed, but still monitored"),
-        ],
-        "log_title": "Example interception log",
-        "log_note": "Sample log for illustration. Every real block records time, rule ID, source IP and action taken.",
-        "limits_title": "Honest limits",
-        "limits": [
-            "No service can stop every attack, such as the use of a correctly stolen password.",
-            "Attackers can rotate IP addresses, so pattern-based detection is essential.",
-            "Very large traffic floods (DDoS) need specialist network-level protection.",
-            "If our filter is ever down, enforcement fails open so your site stays online.",
-        ],
-        "plans_title": "Simple pricing in rupees",
-        "plans_sub": "Every plan includes blocking and a 14-day free trial. Pay annually and save 20%.",
-        "per_month": "/ month",
-        "popular": "Most popular",
-        "plans": [
-            {"name": "Starter", "price": "PKR 5,999", "usd": "about USD 21", "for": "Micro businesses with one website", "feats": ["1 website", "Weekly security checks", "Email alerts with fix guides", "Login protection (supported platforms)"], "btn": "Start free trial"},
-            {"name": "Growth", "price": "PKR 17,999", "usd": "about USD 64", "for": "Small businesses with customer data online", "feats": ["Up to 5 sites or databases", "Daily security checks", "Full suspicious-query blocking", "Monthly plain-language report"], "btn": "Start free trial", "popular": True},
-            {"name": "Business", "price": "PKR 49,999", "usd": "about USD 179", "for": "Firms that must show proof to clients and banks", "feats": ["Up to 20 assets", "Continuous checks", "WhatsApp alerts and safety summary", "Virtual patching and custom rules", "Priority support"], "btn": "Talk to sales"},
-            {"name": "Agency", "price": "Custom", "usd": "reseller terms", "for": "Web agencies and software houses", "feats": ["Protect many client sites at once", "Commission on referred customers", "Partner dashboard and monthly statement", "Co-branded reports"], "btn": "Become a partner"},
-        ],
-        "extras_title": "Also available",
         "extras": [
-            ("Security audit", "PKR 60,000", "One website: full scan, manual check of critical findings, written report and one re-test."),
-            ("Twice-a-year audit plan", "PKR 108,000", "Two standard audits in 12 months."),
-            ("Extended audit", "PKR 200,000", "Up to 5 websites or databases."),
-        ],
-        "toast": "Thanks. This demo site does not take sign-ups yet, but your interest is noted.",
-        "cta_title": "See your risk in minutes",
-        "cta_sub": "Run a free check and find out what attackers could see.",
-        "footer": "Vigilaire is an entrepreneurship project of COMSATS University Islamabad, Abbottabad Campus. Prices and figures are planning estimates from the Business Plan 2026.",
-    },
-    "اردو": {
-        "dir": "rtl",
-        "tagline": "چھوٹے کاروبار کے لیے ہر وقت جاگتی سائبر سیکیورٹی",
-        "lang_label": "زبان",
-        "nav": {
-            "overview": "جائزہ",
-            "scan": "مفت سیکیورٹی چیک",
-            "threat": "خطرات کی فیڈ",
-            "block": "بلاکنگ انجن",
-            "plans": "قیمتیں",
-        },
-        "hero_title": "آپ کی ویب سائٹ کا وہ نگہبان جو کبھی نہیں سوتا۔",
-        "hero_sub": "ویجیلاائر روزانہ آپ کی ویب سائٹ اور ڈیٹا بیس کو چیک کرتا ہے، آسان اردو اور انگریزی میں قدم بہ قدم حل کے ساتھ خبردار کرتا ہے، اور محفوظ طریقے سے روکے جا سکنے والے حملے روک دیتا ہے۔",
-        "hero_cta1": "مفت سیکیورٹی چیک کریں",
-        "hero_cta2": "قیمتیں دیکھیں",
-        "stats": [
-            ("< 5 منٹ", "خطرہ ملنے سے الرٹ تک کا ہدف"),
-            ("< 2%", "غلط بلاک کی شرح کا ہدف"),
-            ("اردو + انگریزی", "الرٹس، حل کی رہنمائی اور سپورٹ"),
-            ("PKR 5,999", "ماہانہ ابتدائی قیمت"),
-        ],
-        "three_title": "تلاش کریں۔ خبردار کریں۔ روک دیں۔",
-        "three_sub": "ایک سروس میں تین کام، ان کاروباروں کے لیے جن کے پاس سیکیورٹی ٹیم نہیں۔",
-        "cards": [
-            ("🔍", "کمزوریاں تلاش کرتا ہے", "آپ کی ویب سائٹ اور انٹرنیٹ پر کھلے ڈیٹا بیس اینڈ پوائنٹس میں غلط کنفیگریشن، پرانے کمپوننٹس اور نئے CVEs کی مسلسل جانچ۔"),
-            ("💬", "آسان زبان میں خبردار کرتا ہے", "ہر الرٹ بتاتا ہے کہ مسئلہ کیا ہے، کیوں اہم ہے اور کیسے ٹھیک ہوگا۔ ای میل، واٹس ایپ یا سلیک پر۔"),
-            ("🛑", "محفوظ حملے روکتا ہے", "آپ کی تحریری اجازت سے ویجیلاائر پاس ورڈ اندازے اور واضح بدنیتی والی درخواستیں روکتا ہے جب تک مستقل حل تیار ہو۔"),
-        ],
-        "how_title": "ویجیلاائر کیسے کام کرتا ہے",
-        "how_sub": "یہی عمل ہر مجاز ویب سائٹ کے لیے روزانہ چلتا ہے۔",
-        "steps": [
-            ("سائن اپ اور ملکیت کا ثبوت", "اپنی سائٹ شامل کریں، DNS ریکارڈ یا میٹا ٹیگ سے تصدیق کریں اور تحریری اجازت نامے پر دستخط کریں۔"),
-            ("اثاثوں کی نشاندہی", "ہم آپ کے پبلک صفحات، لاگ اِن فارمز اور ڈیٹا بیس پورٹس کا نقشہ بناتے ہیں۔"),
-            ("حملوں کے نمونوں سے جانچ", "اثاثوں کو معلوم حملوں، غلط کنفیگریشن اور نئے CVEs کے خلاف جانچا جاتا ہے۔"),
-            ("شدت کے مطابق ترتیب", "مسائل کو زیادہ سے کم خطرناک کی ترتیب میں رکھا جاتا ہے۔"),
-            ("منٹوں میں الرٹ", "ای میل یا واٹس ایپ پر مختصر وارننگ اور حل کی رہنمائی ملتی ہے۔"),
-            ("تحفظ اور دوبارہ جانچ", "آپ کے منتخب موڈ میں بلاکنگ چلتی ہے اور مسئلہ ٹھیک ہونے کے بعد دوبارہ جانچ ہوتی ہے۔"),
-        ],
-        "who_title": "ان کاروباروں کے لیے جن کی ویب سائٹ ہے مگر سیکیورٹی ٹیم نہیں",
-        "who": ["آن لائن سٹورز", "سافٹ ویئر کمپنیاں اور اسٹارٹ اپس", "پیمنٹ اور والٹ کمپنیاں", "کلینک اور ہسپتال", "اسکول اور یونیورسٹیاں", "ہوٹل اور ٹور آپریٹرز", "ویب ایجنسیاں (ری سیلر)"],
-        "cmp_title": "انٹرپرائز ٹول یا مفت اسکینر کیوں نہیں؟",
-        "cmp_head": ["", "انٹرپرائز ٹولز", "مفت اسکینرز", "ویجیلاائر"],
-        "cmp_rows": [
-            ("قیمت", "ڈالر میں", "مفت", "روپوں میں، PKR 5,999 سے"),
-            ("تربیت یافتہ آپریٹر درکار", "ہاں", "ہاں", "نہیں"),
-            ("آسان زبان میں الرٹس", "شاذ و نادر", "نہیں", "اردو اور انگریزی"),
-            ("حملے روکنا", "الگ فروخت", "نہیں", "شامل، آپ کی اجازت سے"),
-            ("مقامی سپورٹ", "نہیں", "نہیں", "اردو اور انگریزی، پاکستانی اوقات"),
-        ],
-        "kpi_title": "پہلے سال کے سروس اہداف",
-        "kpi_note": "یہ ویجیلاائر بزنس پلان 2026 کے منصوبہ بند اہداف ہیں، لائیو پیمائش نہیں۔",
-        "kpis": [
-            ("12ویں مہینے تک صارفین", "150", "ہدف"),
-            ("خطرے سے الرٹ تک", "< 5 منٹ", "ہدف"),
-            ("غلط الرٹ کی شرح", "7%", "12ویں مہینے تک"),
-            ("ماہانہ چرن", "< 4%", "ہدف"),
-        ],
-        "scan_title": "مفت سیکیورٹی چیک",
-        "scan_sub": "اپنی ویب سائٹ کا پتہ درج کریں تاکہ دیکھ سکیں ویجیلاائر کی رپورٹ کیسی ہوتی ہے۔ یہ صفحہ صرف نمائشی ہے۔ اصل اسکین کے لیے ملکیت کا ثبوت اور دستخط شدہ اجازت نامہ ضروری ہے۔",
-        "scan_input": "ویب سائٹ کا پتہ",
-        "scan_btn": "نمائشی چیک چلائیں",
-        "scan_bad": "براہِ کرم درست ویب سائٹ پتہ درج کریں، مثلاً https://shop.example.pk",
-        "scan_progress": ["پتے کی جانچ ہو رہی ہے...", "پبلک صفحات اور لاگ اِن فارمز کا نقشہ بن رہا ہے...", "معلوم کمزوریوں سے ملان ہو رہا ہے...", "شدت کے مطابق ترتیب دی جا رہی ہے..."],
-        "scan_done": "نمائشی چیک مکمل ہوا برائے",
-        "scan_demo_note": "یہ صرف نمائشی ڈیٹا ہے۔ آپ کی ویب سائٹ پر کوئی درخواست نہیں بھیجی گئی۔ اصل اسکین کے لیے سائن اپ کریں۔",
-        "sev": {"Critical": "انتہائی خطرناک", "High": "زیادہ", "Medium": "درمیانہ"},
-        "fix_label": "حل کا طریقہ",
-        "why_label": "یہ کیوں اہم ہے",
-        "threat_title": "خطرات کی انٹیلی جنس فیڈ",
-        "threat_sub": "ویجیلاائر روزانہ CISA KEV، NVD اور CVE.org سے نئی اندراجات لیتا ہے، ہر صارف کے سافٹ ویئر سے ملاتا ہے اور اسکور دیتا ہے۔",
-        "threat_src": [
-            ("CISA KEV", "وہ کمزوریاں جو حقیقی حملوں میں استعمال ہو چکی ہیں", "سب سے اہم الرٹس"),
-            ("NVD", "تفصیل، متاثرہ مصنوعات اور CVSS شدت اسکور", "ملان اور اسکورنگ"),
-            ("CVE.org", "سرکاری شناخت نمبر اور مختصر تفصیل", "حوالہ اور دوہری جانچ"),
-        ],
-        "threat_head": ["CVE", "شدت", "خلاصہ", "ویجیلاائر کا اقدام"],
-        "threat_rows": [
-            ("CVE-2023-34362", "Critical", "فائل ٹرانسفر سافٹ ویئر میں SQL انجیکشن جو 2023 میں بڑے پیمانے پر استعمال ہوئی (MOVEit)۔", "مالک کو الرٹ؛ ورچوئل پیچ رول دستیاب"),
-            ("CVE-2026-4891", "Critical", "پرانے ڈیٹا بیس ڈرائیور میں ریموٹ کوڈ ایگزیکیوشن۔", "حل کی رہنمائی کے ساتھ الرٹ"),
-            ("CVE-2026-3102", "High", "ان پٹ کی کمزور جانچ کے باعث کراس سائٹ اسکرپٹنگ۔", "الرٹ بھیجا گیا؛ ان پٹ رول تجویز"),
-            ("CVE-2026-1044", "Medium", "سیکیورٹی ہیڈر کی غلط کنفیگریشن۔", "ایک سطری حل کے ساتھ الرٹ"),
-        ],
-        "threat_note": "یہ نمائش کے لیے مثالی اندراجات ہیں۔ اصل فیڈ بزنس پلان میں بیان کردہ روزانہ پائپ لائن پر چلتی ہے۔",
-        "block_title": "بلاکنگ انجن",
-        "block_sub": "بلاکنگ ہمیشہ اختیاری، وقت کی حد کے ساتھ، لاگ شدہ اور ایک کلک میں واپس ہو سکتی ہے۔ ویجیلاائر پیشگی تحریری اجازت کے بغیر کسی اثاثے کو نہ جانچتا ہے نہ بلاک کرتا ہے۔",
-        "modes_title": "اپنا بلاکنگ موڈ منتخب کریں",
-        "modes": [
-            ("صرف الرٹ", "تلاش کرتا اور خبردار کرتا ہے، کبھی بلاک نہیں کرتا۔ ہر نیا صارف یہاں سے شروع کر سکتا ہے۔"),
-            ("اسٹینڈرڈ", "واضح حملے اور بار بار ناکام لاگ اِن بلاک کرتا ہے۔ تجویز کردہ ڈیفالٹ۔"),
-            ("سخت", "درمیانے درجے کے شبہ والے نمونے بھی بلاک کرتا ہے۔ حملوں سے زیادہ محفوظ مگر اصل صارفین متاثر ہو سکتے ہیں۔"),
-        ],
-        "login_title": "لاگ اِن تحفظ (ابتدائی ڈیفالٹس)",
-        "login_head": ["شرط", "اقدام"],
-        "login_rows": [
-            ("ایک اکاؤنٹ پر تین ناکام لاگ اِن", "اکاؤنٹ 15 منٹ کے لیے لاک اور مالک کو ای میل"),
-            ("ایک IP تین اکاؤنٹس پر ناکام، یا دس منٹ میں دس بار", "IP ایک گھنٹے کے لیے بلاک (پاس ورڈ اسپرے کی روک تھام)"),
-            ("بلاک کے بعد بھی کوششیں جاری", "24 گھنٹے، پھر 7 دن، پھر دستی جائزہ"),
-            ("آپ کے اپنے دفتر کے IP ایڈریس", "اجازت فہرست میں، مگر نگرانی جاری"),
-        ],
-        "log_title": "انٹرسیپشن لاگ کی مثال",
-        "log_note": "یہ صرف مثالی لاگ ہے۔ ہر اصل بلاک میں وقت، رول آئی ڈی، سورس IP اور اقدام درج ہوتا ہے۔",
-        "limits_title": "ایماندارانہ حدود",
-        "limits": [
-            "کوئی سروس ہر حملہ نہیں روک سکتی، مثلاً درست چوری شدہ پاس ورڈ کا استعمال۔",
-            "حملہ آور IP ایڈریس بدل سکتے ہیں، اس لیے پیٹرن پر مبنی شناخت ضروری ہے۔",
-            "بہت بڑے ٹریفک حملوں (DDoS) کے لیے ماہر نیٹ ورک سطح کا تحفظ درکار ہے۔",
-            "اگر ہمارا فلٹر بند ہو جائے تو آپ کی سائٹ چلتی رہتی ہے۔",
-        ],
-        "plans_title": "روپوں میں سادہ قیمتیں",
-        "plans_sub": "ہر پلان میں بلاکنگ اور 14 دن کی مفت آزمائش شامل ہے۔ سالانہ ادائیگی پر 20% بچت۔",
-        "per_month": "/ ماہ",
-        "popular": "سب سے مقبول",
-        "plans": [
-            {"name": "اسٹارٹر", "price": "PKR 5,999", "usd": "تقریباً USD 21", "for": "ایک ویب سائٹ والے چھوٹے کاروبار", "feats": ["1 ویب سائٹ", "ہفتہ وار سیکیورٹی چیک", "حل کی رہنمائی کے ساتھ ای میل الرٹس", "لاگ اِن تحفظ (معاون پلیٹ فارمز)"], "btn": "مفت آزمائش شروع کریں"},
-            {"name": "گروتھ", "price": "PKR 17,999", "usd": "تقریباً USD 64", "for": "وہ کاروبار جن کا کسٹمر ڈیٹا آن لائن ہے", "feats": ["5 تک سائٹس یا ڈیٹا بیس", "روزانہ سیکیورٹی چیک", "مشکوک کوئری کی مکمل بلاکنگ", "ماہانہ آسان زبان رپورٹ"], "btn": "مفت آزمائش شروع کریں", "popular": True},
-            {"name": "بزنس", "price": "PKR 49,999", "usd": "تقریباً USD 179", "for": "وہ ادارے جنہیں کلائنٹس اور بینکوں کو ثبوت دینا ہے", "feats": ["20 تک اثاثے", "مسلسل چیک", "واٹس ایپ الرٹس اور سیفٹی سمری", "ورچوئل پیچنگ اور کسٹم رولز", "ترجیحی سپورٹ"], "btn": "سیلز سے بات کریں"},
-            {"name": "ایجنسی", "price": "حسبِ ضرورت", "usd": "ری سیلر شرائط", "for": "ویب ایجنسیاں اور سافٹ ویئر ہاؤسز", "feats": ["ایک ساتھ کئی کلائنٹ سائٹس کا تحفظ", "ریفر کیے گئے صارفین پر کمیشن", "پارٹنر ڈیش بورڈ اور ماہانہ اسٹیٹمنٹ", "کو برانڈڈ رپورٹس"], "btn": "پارٹنر بنیں"},
-        ],
-        "extras_title": "مزید دستیاب",
-        "extras": [Here is the full `app.py`:
-
-```python
-import hashlib
-import re
-import time
-
-import streamlit as st
-
-# ----------------------------------------------------------------------------
-# Page configuration
-# ----------------------------------------------------------------------------
-st.set_page_config(
-    page_title="Vigilaire | Always-On Cyber Security for Small Businesses",
-    page_icon="🛡️",
-    layout="wide",
-    initial_sidebar_state="collapsed",
-)
-
-
-def h(s: str) -> str:
-    """Flatten HTML so Markdown never treats indented lines as code blocks."""
-    return "".join(line.strip() for line in s.strip().splitlines())
-
-
-# ----------------------------------------------------------------------------
-# Content (English and Urdu), based on the Vigilaire Business Plan 2026
-# ----------------------------------------------------------------------------
-T = {
-    "English": {
-        "dir": "ltr",
-        "tagline": "Always-on cyber security for small businesses",
-        "lang_label": "Language",
-        "nav": {
-            "overview": "Overview",
-            "scan": "Free Security Check",
-            "threat": "Threat Feed",
-            "block": "Blocking Engine",
-            "plans": "Pricing",
-        },
-        "hero_title": "The watchdog that never sleeps for your website.",
-        "hero_sub": "Vigilaire checks your website and databases every day, warns you in simple Urdu and English with a step-by-step fix guide, and blocks the attacks it can safely stop.",
-        "hero_cta1": "Run a free security check",
-        "hero_cta2": "See pricing",
-        "stats": [
-            ("< 5 min", "Target time from detection to owner alert"),
-            ("< 2%", "Target false-block rate"),
-            ("Urdu + English", "Alerts, fix guides and support"),
-            ("PKR 5,999", "Starting price per month"),
-        ],
-        "three_title": "Find it. Warn you. Block it.",
-        "three_sub": "Three jobs in one service, built for businesses without a security team.",
-        "cards": [
-            ("🔍", "Find weak spots", "Continuous scanning of your website and internet-facing database endpoints for misconfigurations, outdated components and newly published CVEs."),
-            ("💬", "Warn you in plain language", "Every alert says what is wrong, why it matters and how to fix it, ranked from most to least dangerous. Sent by email, WhatsApp or Slack."),
-            ("🛑", "Block what is safe to block", "With your written permission, Vigilaire stops password guessing and high-confidence malicious requests while your permanent fix is prepared."),
-        ],
-        "how_title": "How Vigilaire works",
-        "how_sub": "The same cycle runs every day for every authorized website.",
-        "steps": [
-            ("Sign up and prove ownership", "Add your site, verify it with a DNS record or meta tag, and sign the written authorization."),
-            ("Discover assets", "We map your public pages, login forms and database ports."),
-            ("Test against attack patterns", "Assets are checked against known attacks, misconfigurations and new CVEs."),
-            ("Rank by severity", "Findings are ordered from most to least dangerous."),
-            ("Alert within minutes", "You get a short warning and a fix guide by email or WhatsApp."),
-            ("Protect and re-test", "Blocking runs in your chosen mode, and we re-test after you fix."),
-        ],
-        "who_title": "Built for businesses that run a website but have no security team",
-        "who": ["Online stores", "Software companies and start-ups", "Payment and wallet firms", "Clinics and hospitals", "Schools and universities", "Hotels and tour operators", "Web agencies (resellers)"],
-        "cmp_title": "Why not an enterprise tool or a free scanner?",
-        "cmp_head": ["", "Enterprise tools", "Free scanners", "Vigilaire"],
-        "cmp_rows": [
-            ("Price", "Dollar pricing", "Free", "Rupee pricing from PKR 5,999"),
-            ("Needs a trained operator", "Yes", "Yes", "No"),
-            ("Alerts in plain language", "Rarely", "No", "Urdu and English"),
-            ("Blocks attacks", "Sold separately", "No", "Built in, with your permission"),
-            ("Local support", "No", "No", "Urdu and English, Pakistan hours"),
-        ],
-        "kpi_title": "Year-1 service targets",
-        "kpi_note": "These are planning targets from the Vigilaire Business Plan 2026, not live measurements.",
-        "kpis": [
-            ("Customers by Month 12", "150", "Target"),
-            ("Detection to alert", "< 5 min", "Target"),
-            ("False-alert rate", "7%", "By Month 12"),
-            ("Monthly churn", "< 4%", "Target"),
-        ],
-        "scan_title": "Free security check",
-        "scan_sub": "Enter your website address to see the kind of report Vigilaire produces. This page runs a demonstration only. A real scan needs proof of ownership and a signed authorization.",
-        "scan_input": "Website address",
-        "scan_btn": "Run demo check",
-        "scan_bad": "Please enter a valid website address, for example https://shop.example.pk",
-        "scan_progress": ["Verifying address format...", "Mapping public pages and login forms...", "Matching against known weaknesses...", "Ranking findings by severity..."],
-        "scan_done": "Demo check finished for",
-        "scan_demo_note": "Demonstration data only. No request was sent to your website. Sign up to run an authorized scan.",
-        "sev": {"Critical": "Critical", "High": "High", "Medium": "Medium"},
-        "fix_label": "How to fix it",
-        "why_label": "Why it matters",
-        "threat_title": "Threat intelligence feed",
-        "threat_sub": "Vigilaire pulls new entries every day from CISA KEV, NVD and CVE.org, matches them to each customer's software list and scores them.",
-        "threat_src": [
-            ("CISA KEV", "Weaknesses already used in real attacks", "Highest-priority alerts"),
-            ("NVD", "Details, affected products and CVSS severity score", "Matching and scoring"),
-            ("CVE.org", "Official identifiers and short descriptions", "Reference and cross-check"),
-        ],
-        "threat_head": ["CVE", "Severity", "Summary", "Vigilaire action"],
-        "threat_rows": [
-            ("CVE-2023-34362", "Critical", "SQL injection in file-transfer software, exploited at scale in 2023 (MOVEit).", "Owner alerted; virtual patch rule available"),
-            ("CVE-2026-4891", "Critical", "Remote code execution in a legacy database driver.", "Owner alerted with fix guide"),
-            ("CVE-2026-3102", "High", "Cross-site scripting through weak input validation.", "Alert sent; input rule suggested"),
-            ("CVE-2026-1044", "Medium", "Security header misconfiguration.", "Alert sent with one-line fix"),
-        ],
-        "threat_note": "Illustrative sample entries for demonstration. The live feed runs on the daily pipeline described in the business plan.",
-        "block_title": "Blocking engine",
-        "block_sub": "Blocking is always optional, time-limited, logged and reversible with one click. Vigilaire never tests or blocks any asset without prior written authorization.",
-        "modes_title": "Choose your blocking mode",
-        "modes": [
-            ("Alert-only", "Finds and warns, but never blocks. Every new customer can start here."),
-            ("Standard", "Blocks high-confidence attacks and repeated failed logins. The recommended default."),
-            ("Strict", "Also blocks medium-confidence patterns. Safer against attacks, but more likely to affect real users."),
-        ],
-        "login_title": "Login protection (starting defaults)",
-        "login_head": ["Condition", "Action"],
-        "login_rows": [
-            ("Three failed logins on one account", "Lock the account for 15 minutes and email the owner"),
-            ("One IP fails on three accounts, or ten times in ten minutes", "Block the IP for 1 hour (stops password spraying)"),
-            ("Attempts continue after a block", "Escalate to 24 hours, then 7 days, then manual review"),
-            ("Your own office IP addresses", "Allow-listed, but still monitored"),
-        ],
-        "log_title": "Example interception log",
-        "log_note": "Sample log for illustration. Every real block records time, rule ID, source IP and action taken.",
-        "limits_title": "Honest limits",
-        "limits": [
-            "No service can stop every attack, such as the use of a correctly stolen password.",
-            "Attackers can rotate IP addresses, so pattern-based detection is essential.",
-            "Very large traffic floods (DDoS) need specialist network-level protection.",
-            "If our filter is ever down, enforcement fails open so your site stays online.",
-        ],
-        "plans_title": "Simple pricing in rupees",
-        "plans_sub": "Every plan includes blocking and a 14-day free trial. Pay annually and save 20%.",
-        "per_month": "/ month",
-        "popular": "Most popular",
-        "plans": [
-            {"name": "Starter", "price": "PKR 5,999", "usd": "about USD 21", "for": "Micro businesses with one website", "feats": ["1 website", "Weekly security checks", "Email alerts with fix guides", "Login protection (supported platforms)"], "btn": "Start free trial"},
-            {"name": "Growth", "price": "PKR 17,999", "usd": "about USD 64", "for": "Small businesses with customer data online", "feats": ["Up to 5 sites or databases", "Daily security checks", "Full suspicious-query blocking", "Monthly plain-language report"], "btn": "Start free trial", "popular": True},
-            {"name": "Business", "price": "PKR 49,999", "usd": "about USD 179", "for": "Firms that must show proof to clients and banks", "feats": ["Up to 20 assets", "Continuous checks", "WhatsApp alerts and safety summary", "Virtual patching and custom rules", "Priority support"], "btn": "Talk to sales"},
-            {"name": "Agency", "price": "Custom", "usd": "reseller terms", "for": "Web agencies and software houses", "feats": ["Protect many client sites at once", "Commission on referred customers", "Partner dashboard and monthly statement", "Co-branded reports"], "btn": "Become a partner"},
-        ],
-        "extras_title": "Also available",
-        "extras": [
-            ("Security audit", "PKR 60,000", "One website: full scan, manual check of critical findings, written report and one re-test."),
-            ("Twice-a-year audit plan", "PKR 108,000", "Two standard audits in 12 months."),
-            ("Extended audit", "PKR 200,000", "Up to 5 websites or databases."),
-        ],
-        "toast": "Thanks. This demo site does not take sign-ups yet, but your interest is noted.",
-        "cta_title": "See your risk in minutes",
-        "cta_sub": "Run a free check and find out what attackers could see.",
-        "footer": "Vigilaire is an entrepreneurship project of COMSATS University Islamabad, Abbottabad Campus. Prices and figures are planning estimates from the Business Plan 2026.",
-    },
-    "اردو": {
-        "dir": "rtl",
-        "tagline": "چھوٹے کاروبار کے لیے ہر وقت جاگتی سائبر سیکیورٹی",
-        "lang_label": "زبان",
-        "nav": {
-            "overview": "جائزہ",
-            "scan": "مفت سیکیورٹی چیک",
-            "threat": "خطرات کی فیڈ",
-            "block": "بلاکنگ انجن",
-            "plans": "قیمتیں",
-        },
-        "hero_title": "آپ کی ویب سائٹ کا وہ نگہبان جو کبھی نہیں سوتا۔",
-        "hero_sub": "ویجیلاائر روزانہ آپ کی ویب سائٹ اور ڈیٹا بیس کو چیک کرتا ہے، آسان اردو اور انگریزی میں قدم بہ قدم حل کے ساتھ خبردار کرتا ہے، اور محفوظ طریقے سے روکے جا سکنے والے حملے روک دیتا ہے۔",
-        "hero_cta1": "مفت سیکیورٹی چیک کریں",
-        "hero_cta2": "قیمتیں دیکھیں",
-        "stats": [
-            ("< 5 منٹ", "خطرہ ملنے سے الرٹ تک کا ہدف"),
-            ("< 2%", "غلط بلاک کی شرح کا ہدف"),
-            ("اردو + انگریزی", "الرٹس، حل کی رہنمائی اور سپورٹ"),
-            ("PKR 5,999", "ماہانہ ابتدائی قیمت"),
-        ],
-        "three_title": "تلاش کریں۔ خبردار کریں۔ روک دیں۔",
-        "three_sub": "ایک سروس میں تین کام، ان کاروباروں کے لیے جن کے پاس سیکیورٹی ٹیم نہیں۔",
-        "cards": [
-            ("🔍", "کمزوریاں تلاش کرتا ہے", "آپ کی ویب سائٹ اور انٹرنیٹ پر کھلے ڈیٹا بیس اینڈ پوائنٹس میں غلط کنفیگریشن، پرانے کمپوننٹس اور نئے CVEs کی مسلسل جانچ۔"),
-            ("💬", "آسان زبان میں خبردار کرتا ہے", "ہر الرٹ بتاتا ہے کہ مسئلہ کیا ہے، کیوں اہم ہے اور کیسے ٹھیک ہوگا۔ ای میل، واٹس ایپ یا سلیک پر۔"),
-            ("🛑", "محفوظ حملے روکتا ہے", "آپ کی تحریری اجازت سے ویجیلاائر پاس ورڈ اندازے اور واضح بدنیتی والی درخواستیں روکتا ہے جب تک مستقل حل تیار ہو۔"),
-        ],
-        "how_title": "ویجیلاائر کیسے کام کرتا ہے",
-        "how_sub": "یہی عمل ہر مجاز ویب سائٹ کے لیے روزانہ چلتا ہے۔",
-        "steps": [
-            ("سائن اپ اور ملکیت کا ثبوت", "اپنی سائٹ شامل کریں، DNS ریکارڈ یا میٹا ٹیگ سے تصدیق کریں اور تحریری اجازت نامے پر دستخط کریں۔"),
-            ("اثاثوں کی نشاندہی", "ہم آپ کے پبلک صفحات، لاگ اِن فارمز اور ڈیٹا بیس پورٹس کا نقشہ بناتے ہیں۔"),
-            ("حملوں کے نمونوں سے جانچ", "اثاثوں کو معلوم حملوں، غلط کنفیگریشن اور نئے CVEs کے خلاف جانچا جاتا ہے۔"),
-            ("شدت کے مطابق ترتیب", "مسائل کو زیادہ سے کم خطرناک کی ترتیب میں رکھا جاتا ہے۔"),
-            ("منٹوں میں الرٹ", "ای میل یا واٹس ایپ پر مختصر وارننگ اور حل کی رہنمائی ملتی ہے۔"),
-            ("تحفظ اور دوبارہ جانچ", "آپ کے منتخب موڈ میں بلاکنگ چلتی ہے اور مسئلہ ٹھیک ہونے کے بعد دوبارہ جانچ ہوتی ہے۔"),
-        ],
-        "who_title": "ان کاروباروں کے لیے جن کی ویب سائٹ ہے مگر سیکیورٹی ٹیم نہیں",
-        "who": ["آن لائن سٹورز", "سافٹ ویئر کمپنیاں اور اسٹارٹ اپس", "پیمنٹ اور والٹ کمپنیاں", "کلینک اور ہسپتال", "اسکول اور یونیورسٹیاں", "ہوٹل اور ٹور آپریٹرز", "ویب ایجنسیاں (ری سیلر)"],
-        "cmp_title": "انٹرپرائز ٹول یا مفت اسکینر کیوں نہیں؟",
-        "cmp_head": ["", "انٹرپرائز ٹولز", "مفت اسکینرز", "ویجیلاائر"],
-        "cmp_rows": [
-            ("قیمت", "ڈالر میں", "مفت", "روپوں میں، PKR 5,999 سے"),
-            ("تربیت یافتہ آپریٹر درکار", "ہاں", "ہاں", "نہیں"),
-            ("آسان زبان میں الرٹس", "شاذ و نادر", "نہیں", "اردو اور انگریزی"),
-            ("حملے روکنا", "الگ فروخت", "نہیں", "شامل، آپ کی اجازت سے"),
-            ("مقامی سپورٹ", "نہیں", "نہیں", "اردو اور انگریزی، پاکستانی اوقات"),
-        ],
-        "kpi_title": "پہلے سال کے سروس اہداف",
-        "kpi_note": "یہ ویجیلاائر بزنس پلان 2026 کے منصوبہ بند اہداف ہیں، لائیو پیمائش نہیں۔",
-        "kpis": [
-            ("12ویں مہینے تک صارفین", "150", "ہدف"),
-            ("خطرے سے الرٹ تک", "< 5 منٹ", "ہدف"),
-            ("غلط الرٹ کی شرح", "7%", "12ویں مہینے تک"),
-            ("ماہانہ چرن", "< 4%", "ہدف"),
-        ],
-        "scan_title": "مفت سیکیورٹی چیک",
-        "scan_sub": "اپنی ویب سائٹ کا پتہ درج کریں تاکہ دیکھ سکیں ویجیلاائر کی رپورٹ کیسی ہوتی ہے۔ یہ صفحہ صرف نمائشی ہے۔ اصل اسکین کے لیے ملکیت کا ثبوت اور دستخط شدہ اجازت نامہ ضروری ہے۔",
-        "scan_input": "ویب سائٹ کا پتہ",
-        "scan_btn": "نمائشی چیک چلائیں",
-        "scan_bad": "براہِ کرم درست ویب سائٹ پتہ درج کریں، مثلاً https://shop.example.pk",
-        "scan_progress": ["پتے کی جانچ ہو رہی ہے...", "پبلک صفحات اور لاگ اِن فارمز کا نقشہ بن رہا ہے...", "معلوم کمزوریوں سے ملان ہو رہا ہے...", "شدت کے مطابق ترتیب دی جا رہی ہے..."],
-        "scan_done": "نمائشی چیک مکمل ہوا برائے",
-        "scan_demo_note": "یہ صرف نمائشی ڈیٹا ہے۔ آپ کی ویب سائٹ پر کوئی درخواست نہیں بھیجی گئی۔ اصل اسکین کے لیے سائن اپ کریں۔",
-        "sev": {"Critical": "انتہائی خطرناک", "High": "زیادہ", "Medium": "درمیانہ"},
-        "fix_label": "حل کا طریقہ",
-        "why_label": "یہ کیوں اہم ہے",
-        "threat_title": "خطرات کی انٹیلی جنس فیڈ",
-        "threat_sub": "ویجیلاائر روزانہ CISA KEV، NVD اور CVE.org سے نئی اندراجات لیتا ہے، ہر صارف کے سافٹ ویئر سے ملاتا ہے اور اسکور دیتا ہے۔",
-        "threat_src": [
-            ("CISA KEV", "وہ کمزوریاں جو حقیقی حملوں میں استعمال ہو چکی ہیں", "سب سے اہم الرٹس"),
-            ("NVD", "تفصیل، متاثرہ مصنوعات اور CVSS شدت اسکور", "ملان اور اسکورنگ"),
-            ("CVE.org", "سرکاری شناخت نمبر اور مختصر تفصیل", "حوالہ اور دوہری جانچ"),
-        ],
-        "threat_head": ["CVE", "شدت", "خلاصہ", "ویجیلاائر کا اقدام"],
-        "threat_rows": [
-            ("CVE-2023-34362", "Critical", "فائل ٹرانسفر سافٹ ویئر میں SQL انجیکشن جو 2023 میں بڑے پیمانے پر استعمال ہوئی (MOVEit)۔", "مالک کو الرٹ؛ ورچوئل پیچ رول دستیاب"),
-            ("CVE-2026-4891", "Critical", "پرانے ڈیٹا بیس ڈرائیور میں ریموٹ کوڈ ایگزیکیوشن۔", "حل کی رہنمائی کے ساتھ الرٹ"),
-            ("CVE-2026-3102", "High", "ان پٹ کی کمزور جانچ کے باعث کراس سائٹ اسکرپٹنگ۔", "الرٹ بھیجا گیا؛ ان پٹ رول تجویز"),
-            ("CVE-2026-1044", "Medium", "سیکیورٹی ہیڈر کی غلط کنفیگریشن۔", "ایک سطری حل کے ساتھ الرٹ"),
-        ],
-        "threat_note": "یہ نمائش کے لیے مثالی اندراجات ہیں۔ اصل فیڈ بزنس پلان میں بیان کردہ روزانہ پائپ لائن پر چلتی ہے۔",
-        "block_title": "بلاکنگ انجن",
-        "block_sub": "بلاکنگ ہمیشہ اختیاری، وقت کی حد کے ساتھ، لاگ شدہ اور ایک کلک میں واپس ہو سکتی ہے۔ ویجیلاائر پیشگی تحریری اجازت کے بغیر کسی اثاثے کو نہ جانچتا ہے نہ بلاک کرتا ہے۔",
-        "modes_title": "اپنا بلاکنگ موڈ منتخب کریں",
-        "modes": [
-            ("صرف الرٹ", "تلاش کرتا اور خبردار کرتا ہے، کبھی بلاک نہیں کرتا۔ ہر نیا صارف یہاں سے شروع کر سکتا ہے۔"),
-            ("اسٹینڈرڈ", "واضح حملے اور بار بار ناکام لاگ اِن بلاک کرتا ہے۔ تجویز کردہ ڈیفالٹ۔"),
-            ("سخت", "درمیانے درجے کے شبہ والے نمونے بھی بلاک کرتا ہے۔ حملوں سے زیادہ محفوظ مگر اصل صارفین متاثر ہو سکتے ہیں۔"),
-        ],
-        "login_title": "لاگ اِن تحفظ (ابتدائی ڈیفالٹس)",
-        "login_head": ["شرط", "اقدام"],
-        "login_rows": [
-            ("ایک اکاؤنٹ پر تین ناکام لاگ اِن", "اکاؤنٹ 15 منٹ کے لیے لاک اور مالک کو ای میل"),
-            ("ایک IP تین اکاؤنٹس پر ناکام، یا دس منٹ میں دس بار", "IP ایک گھنٹے کے لیے بلاک (پاس ورڈ اسپرے کی روک تھام)"),
-            ("بلاک کے بعد بھی کوششیں جاری", "24 گھنٹے، پھر 7 دن، پھر دستی جائزہ"),
-            ("آپ کے اپنے دفتر کے IP ایڈریس", "اجازت فہرست میں، مگر نگرانی جاری"),
-        ],
-        "log_title": "انٹرسیپشن لاگ کی مثال",
-        "log_note": "یہ صرف مثالی لاگ ہے۔ ہر اصل بلاک میں وقت، رول آئی ڈی، سورس IP اور اقدام درج ہوتا ہے۔",
-        "limits_title": "ایماندارانہ حدود",
-        "limits": [
-            "کوئی سروس ہر حملہ نہیں روک سکتی، مثلاً درست چوری شدہ پاس ورڈ کا استعمال۔",
-            "حملہ آور IP ایڈریس بدل سکتے ہیں، اس لیے پیٹرن پر مبنی شناخت ضروری ہے۔",
-            "بہت بڑے ٹریفک حملوں (DDoS) کے لیے ماہر نیٹ ورک سطح کا تحفظ درکار ہے۔",
-            "اگر ہمارا فلٹر بند ہو جائے تو آپ کی سائٹ چلتی رہتی ہے۔",
-        ],
-        "plans_title": "روپوں میں سادہ قیمتیں",
-        "plans_sub": "ہر پلان میں بلاکنگ اور 14 دن کی مفت آزمائش شامل ہے۔ سالانہ ادائیگی پر 20% بچت۔",
-        "per_month": "/ ماہ",
-        "popular": "سب سے مقبول",
-        "plans": [
-            {"name": "اسٹارٹر", "price": "PKR 5,999", "usd": "تقریباً USD 21", "for": "ایک ویب سائٹ والے چھوٹے کاروبار", "feats": ["1 ویب سائٹ", "ہفتہ وار سیکیورٹی چیک", "حل کی رہنمائی کے ساتھ ای میل الرٹس", "لاگ اِن تحفظ (معاون پلیٹ فارمز)"], "btn": "مفت آزمائش شروع کریں"},
-            {"name": "گروتھ", "price": "PKR 17,999", "usd": "تقریباً USD 64", "for": "وہ کاروبار جن کا کسٹمر ڈیٹا آن لائن ہے", "feats": ["5 تک سائٹس یا ڈیٹا بیس", "روزانہ سیکیورٹی چیک", "مشکوک کوئری کی مکمل بلاکنگ", "ماہانہ آسان زبان رپورٹ"], "btn": "مفت آزمائش شروع کریں", "popular": True},
-            {"name": "بزنس", "price": "PKR 49,999", "usd": "تقریباً USD 179", "for": "وہ ادارے جنہیں کلائنٹس اور بینکوں کو ثبوت دینا ہے", "feats": ["20 تک اثاثے", "مسلسل چیک", "واٹس ایپ الرٹس اور سیفٹی سمری", "ورچوئل پیچنگ اور کسٹم رولز", "ترجیحی سپورٹ"], "btn": "سیلز سے بات کریں"},
-            {"name": "ایجنسی", "price": "حسبِ ضرورت", "usd": "ری سیلر شرائط", "for": "ویب ایجنسیاں اور سافٹ ویئر ہاؤسز", "feats": ["ایک ساتھ کئی کلائنٹ سائٹس کا تحفظ", "ریفر کیے گئے صارفین پر کمیشن", "پارٹنر ڈیش بورڈ اور ماہانہ اسٹیٹمنٹ", "کو برانڈڈ رپورٹس"], "btn": "پارٹنر بنیں"},
-        ],
-        "extras_title": "مزید دستیاب",
-        "extras": [("سیکیورٹی آڈٹ", "PKR 60,000", "ایک ویب سائٹ: مکمل اسکین، اہم مسائل کی دستی جانچ، تحریری رپورٹ اور ایک دوبارہ جانچ۔"),
+            ("سیکیورٹی آڈٹ", "PKR 60,000", "ایک ویب سائٹ: مکمل اسکین، اہم مسائل کی دستی جانچ، تحریری رپورٹ اور ایک دوبارہ جانچ۔"),
             ("سال میں دو بار آڈٹ پلان", "PKR 108,000", "12 مہینوں میں دو اسٹینڈرڈ آڈٹ۔"),
             ("توسیع شدہ آڈٹ", "PKR 200,000", "5 تک ویب سائٹس یا ڈیٹا بیس۔"),
         ],
@@ -1257,6 +703,77 @@ elif page == "scan":
 elif page == "threat":
     title(t["threat_title"], t["threat_sub"])
     src_html = "".join(
+        f"<div class='card'><h3>{a}</h3><p>{b}</p><p style='margin-top:10px'><b>{c}</b></p></div>"
+        for a, b, c in t["threat_src"]
+    )
+    st.markdown(f'<div class="grid3">{src_html}</div>', unsafe_allow_html=True)
+    st.markdown("<div style='height:28px'></div>", unsafe_allow_html=True)
+    st.markdown(table(t["threat_head"], t["threat_rows"], badge_col=1), unsafe_allow_html=True)
+    st.markdown(f'<div class="note">{t["threat_note"]}</div>', unsafe_allow_html=True)
+    footer()
+
+elif page == "block":
+    title(t["block_title"], t["block_sub"])
+
+    st.markdown(f'<h3 style="font-size:1.7rem">{t["modes_title"]}</h3>', unsafe_allow_html=True)
+    icons = ["👁️", "🛡️", "🔒"]
+    modes_html = "".join(
+        f"<div class='card'><div class='ic'>{icons[i]}</div><h3>{a}</h3><p>{b}</p></div>"
+        for i, (a, b) in enumerate(t["modes"])
+    )
+    st.markdown(f'<div class="grid3">{modes_html}</div>', unsafe_allow_html=True)
+
+    st.markdown(f'<h3 style="font-size:1.7rem;margin-top:36px">{t["login_title"]}</h3>', unsafe_allow_html=True)
+    st.markdown(table(t["login_head"], t["login_rows"]), unsafe_allow_html=True)
+
+    st.markdown(f'<h3 style="font-size:1.7rem;margin-top:36px">{t["log_title"]}</h3>', unsafe_allow_html=True)
+    st.markdown(
+        h("""
+        <div class="logbox">
+        <span class="bl">[BLOCKED]</span> 203.0.113.12 &nbsp;SQL injection pattern on /login &nbsp;(rule R-014, 1 h)<br>
+        <span class="bl">[BLOCKED]</span> 198.51.100.44 &nbsp;Repeated failed logins on 3 accounts &nbsp;(rule L-002, 1 h)<br>
+        <span class="mt">[WATCHING]</span> 192.0.2.77 &nbsp;Unusual request pattern, owner notified, no block<br>
+        <span class="mt">[SLOWED]</span> 198.51.100.9 &nbsp;Very fast probing, rate limit applied
+        </div>
+        """),
+        unsafe_allow_html=True,
+    )
+    st.markdown(f'<div class="note">{t["log_note"]}</div>', unsafe_allow_html=True)
+
+    st.markdown(f'<h3 style="font-size:1.7rem;margin-top:36px">{t["limits_title"]}</h3>', unsafe_allow_html=True)
+    for item in t["limits"]:
+        st.markdown(f"- {item}")
+    footer()
+
+elif page == "plans":
+    title(t["plans_title"], t["plans_sub"])
+
+    cols = st.columns(4, gap="medium")
+    for i, (col, p) in enumerate(zip(cols, t["plans"])):
+        with col:
+            pop = p.get("popular", False)
+            badge = f'<div class="pop-badge">{t["popular"]}</div>' if pop else ""
+            per = "" if p["price"] in ("Custom", "حسبِ ضرورت") else f' <span class="per">{t["per_month"]}</span>'
+            feats = "".join(f"<li>{f}</li>" for f in p["feats"])
+            st.markdown(
+                h(f"""
+                <div class="plan {'pop' if pop else ''}">
+                  {badge}
+                  <h3>{p['name']}</h3>
+                  <div class="for">{p['for']}</div>
+                  <div class="price">{p['price']}{per}</div>
+                  <div class="usd">{p['usd']}</div>
+                  <ul>{feats}</ul>
+                </div>
+                """),
+                unsafe_allow_html=True,
+            )
+            st.markdown("<div style='height:12px'></div>", unsafe_allow_html=True)
+            if st.button(p["btn"], key=f"plan_{i}"):
+                st.toast(t["toast"], icon="✅")
+
+    title(t["extras_title"])
+    e_html = "".join(
         f"<div class='card'><h3>{a}</h3><div class='price' style='font-size:1.8rem;font-weight:800;color:#0A2540;margin-bottom:8px'>{b}</div><p>{c}</p></div>"
         for a, b, c in t["extras"]
     )
@@ -1264,3 +781,4 @@ elif page == "threat":
 
     cta_band()
     footer()
+
