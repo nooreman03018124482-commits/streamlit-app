@@ -8,7 +8,7 @@ import streamlit as st
 # Page configuration
 # ----------------------------------------------------------------------------
 st.set_page_config(
-    page_title="Vigilaire | Always-On Cyber Security for Small Businesses",
+    page_title="Vigilaire | Continuous Security. Continuous Protection.",
     page_icon="🛡️",
     layout="wide",
     initial_sidebar_state="collapsed",
@@ -26,7 +26,7 @@ def h(s: str) -> str:
 T = {
     "English": {
         "dir": "ltr",
-        "tagline": "Always-on cyber security for small businesses",
+        "tagline": "Continuous Security. Continuous Protection.",
         "lang_label": "Language",
         "nav": {
             "overview": "Overview",
@@ -155,7 +155,7 @@ T = {
     },
     "اردو": {
         "dir": "rtl",
-        "tagline": "چھوٹے کاروبار کے لیے ہر وقت جاگتی سائبر سیکیورٹی",
+        "tagline": "مسلسل سیکیورٹی۔ مسلسل تحفظ۔",
         "lang_label": "زبان",
         "nav": {
             "overview": "جائزہ",
